@@ -64,7 +64,7 @@ export default function RegisterScreen() {
       <View style={{ gap: 14 }}>
         {/* Role selector */}
         <View style={{ flexDirection: 'row', gap: 12 }}>
-          {(['client', 'therapist'] as UserRole[]).map((role) => (
+          {(['client', 'therapist'] as const).map((role) => (
             <TouchableOpacity
               key={role}
               onPress={() => setValue('role', role)}

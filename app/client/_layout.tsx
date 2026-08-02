@@ -13,7 +13,7 @@ export default function ClientLayout() {
       screenOptions={{ headerShown: false, tabBarActiveTintColor: '#059669' }}
     >
       <Tabs.Screen name="index" options={{ href: null }} />
-      <Tabs.Screen name="therapist" options={{ href: '/therapist' }} />
+      <Tabs.Screen name="therapist" options={{ href: '/therapist' as any }} />
     </Tabs>;
   }
 

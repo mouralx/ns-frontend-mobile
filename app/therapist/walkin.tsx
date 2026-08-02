@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useServices, useBookAppointment } from '@/hooks';
-import { Calendar } from 'react-native-calendars';
+import { Calendar, DateData } from 'react-native-calendars';
 import { format } from 'date-fns';
 
 const walkinSchema = z.object({
@@ -156,7 +156,7 @@ export default function WalkinScreen() {
       <View style={{ marginBottom: 20 }}>
         <Text style={{ fontSize: 13, fontWeight: '500', color: '#374151', marginBottom: 8 }}>Date</Text>
         <Calendar
-          onDayPress={(day) => setSelectedDate(day.dateString)}
+          onDayPress={(day: DateData) => setSelectedDate(day.dateString)}
           markedDates={selectedDate ? { [selectedDate]: { selected: true, selectedColor: '#059669' } } : {}}
           minDate={new Date().toISOString().split('T')[0]}
           theme={{ todayTextColor: '#059669', arrowColor: '#059669' }}
