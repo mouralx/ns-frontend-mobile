@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useServices, useBookAppointment } from '@/hooks';
 import { Calendar, DateData } from 'react-native-calendars';
-import { format } from 'date-fns';
 
 const walkinSchema = z.object({
   clientName: z.string().min(2, 'Client name is required'),

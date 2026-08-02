@@ -5,7 +5,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuthStore } from '@/stores';
-import type { UserRole } from '@/types';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
