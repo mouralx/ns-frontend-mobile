@@ -5,6 +5,7 @@
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? 'https://api.massagebooking.com/v1';
 
@@ -20,25 +21,48 @@ const TOKEN_KEYS = {
   refresh: 'auth_refresh_token',
 } as const;
 
+async function getToken(key: string): Promise<string | null> {
+  if (Platform.OS === 'web') {
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(key);
+  }
+  return SecureStore.getItemAsync(key);
+}
+
+async function setToken(key: string, value: string): Promise<void> {
+  if (Platform.OS === 'web') {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(key, value);
+    return;
+  }
+  await SecureStore.setItemAsync(key, value);
+}
+
+async function deleteToken(key: string): Promise<void> {
+  if (Platform.OS === 'web') {
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(key);
+    return;
+  }
+  await SecureStore.deleteItemAsync(key);
+}
+
 export async function getStoredTokens() {
   const [access, refresh] = await Promise.all([
-    SecureStore.getItemAsync(TOKEN_KEYS.access),
-    SecureStore.getItemAsync(TOKEN_KEYS.refresh),
+    getToken(TOKEN_KEYS.access),
+    getToken(TOKEN_KEYS.refresh),
   ]);
   return { access, refresh };
 }
 
 export async function storeTokens(tokens: { access_token: string; refresh_token: string }) {
   await Promise.all([
-    SecureStore.setItemAsync(TOKEN_KEYS.access, tokens.access_token),
-    SecureStore.setItemAsync(TOKEN_KEYS.refresh, tokens.refresh_token),
+    setToken(TOKEN_KEYS.access, tokens.access_token),
+    setToken(TOKEN_KEYS.refresh, tokens.refresh_token),
   ]);
 }
 
 export async function clearTokens() {
   await Promise.all([
-    SecureStore.deleteItemAsync(TOKEN_KEYS.access),
-    SecureStore.deleteItemAsync(TOKEN_KEYS.refresh),
+    deleteToken(TOKEN_KEYS.access),
+    deleteToken(TOKEN_KEYS.refresh),
   ]);
 }
 

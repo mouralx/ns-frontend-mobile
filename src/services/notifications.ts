@@ -3,20 +3,17 @@
 // ============================================================
 
 import { apiClient } from './api';
-import type { Notification, ApiResponse, PaginatedResponse } from '@/types';
+import type { Notification, ApiResponse } from '@/types';
 
 export const notificationsApi = {
-  async list(page = 1, perPage = 20): Promise<PaginatedResponse<Notification>> {
-    const { data } = await apiClient.get<PaginatedResponse<Notification>>('/notifications', {
+  async list(page = 1, perPage = 20): Promise<Notification[]> {
+    const { data } = await apiClient.get<ApiResponse<Notification[]>>('/notifications', {
       params: { page, per_page: perPage },
     });
-    return data;
+    return data.data;
   },
 
-  async markRead(id: string): Promise<Notification> {
-    const { data } = await apiClient.put<ApiResponse<Notification>>(
-      `/notifications/${id}/read`
-    );
-    return data.data;
+  async markRead(id: string): Promise<void> {
+    await apiClient.put(`/notifications/${id}/read`);
   },
 };

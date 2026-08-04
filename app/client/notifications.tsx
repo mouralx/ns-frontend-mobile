@@ -6,12 +6,14 @@ import { format } from 'date-fns';
 import type { Notification, NotificationType } from '@/types';
 
 const NOTIFICATION_ICONS: Record<NotificationType, string> = {
+  booking_created: '📅',
   booking_confirmation: '✅',
+  appointment_reminder: '⏰',
+  appointment_cancelled: '❌',
+  appointment_confirmed: '✅',
+  appointment_update: '📝',
   confirmation_request: '❓',
-  reminder_2h: '⏰',
-  cancellation: '❌',
-  therapist_alert: '⚠️',
-  walkin_confirmation: '💆',
+  general: '🔔',
 };
 
 export default function NotificationsScreen() {
@@ -21,7 +23,7 @@ export default function NotificationsScreen() {
 
   useEffect(() => {
     if (data) {
-      const unread = data.items.filter((n) => n.status !== 'read').length;
+      const unread = data.filter((n) => n.status !== 'read').length;
       setUnreadCount(unread);
     }
   }, [data, setUnreadCount]);
@@ -94,7 +96,7 @@ export default function NotificationsScreen() {
       </View>
 
       <FlatList
-        data={data?.items ?? []}
+        data={data ?? []}
         keyExtractor={(item) => item.id}
         renderItem={renderNotification}
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} />}

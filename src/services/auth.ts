@@ -22,12 +22,11 @@ export const authApi = {
   },
 
   async register(payload: RegisterRequest): Promise<User> {
-    const { data } = await apiClient.post<AuthTokens & { user: User }>(
+    await apiClient.post<ApiResponse<User>>(
       '/auth/register',
       payload
     );
-    await storeTokens(data);
-    return data.user;
+    return authApi.login({ email: payload.email, password: payload.password });
   },
 
   async refresh(): Promise<AuthTokens> {

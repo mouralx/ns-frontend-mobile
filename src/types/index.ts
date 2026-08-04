@@ -122,26 +122,26 @@ export interface AvailabilityBlock {
 
 // --- Notifications ---
 export type NotificationType =
+  | 'booking_created'
   | 'booking_confirmation'
+  | 'appointment_reminder'
+  | 'appointment_cancelled'
+  | 'appointment_confirmed'
+  | 'appointment_update'
   | 'confirmation_request'
-  | 'reminder_2h'
-  | 'cancellation'
-  | 'therapist_alert'
-  | 'walkin_confirmation';
+  | 'general';
 
-export type NotificationChannel = 'push' | 'in_app';
+export type NotificationChannel = 'push' | 'in_app' | 'email' | 'sms';
 export type NotificationStatus = 'pending' | 'sent' | 'delivered' | 'failed' | 'read';
 
 export interface Notification {
   id: string;
-  user_id: string;
   appointment_id: string | null;
   type: NotificationType;
   channel: NotificationChannel;
   status: NotificationStatus;
   sent_at: string | null;
   read_at: string | null;
-  delivered_at: string | null;
   error_message: string | null;
   created_at: string;
 }

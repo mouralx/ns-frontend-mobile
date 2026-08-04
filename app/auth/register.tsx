@@ -19,6 +19,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 export default function RegisterScreen() {
   const register = useAuthStore((s) => s.register);
   const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     control,
@@ -34,12 +35,17 @@ export default function RegisterScreen() {
   const selectedRole = watch('role');
 
   const onSubmit = async (data: RegisterFormData) => {
+    setSubmitError(null);
     setIsLoading(true);
     try {
       await register(data);
-      router.replace('/client');
+      router.replace(data.role === 'therapist' ? '/therapist/schedule' : '/client');
     } catch (error) {
-      Alert.alert('Registration Failed', 'Could not create account. Please try again.');
+      const message =
+        (error as { response?: { data?: { error?: string } } }).response?.data?.error ??
+        'Could not create account. Please try again.';
+      setSubmitError(message);
+      Alert.alert('Registration Failed', message);
     } finally {
       setIsLoading(false);
     }
@@ -230,6 +236,12 @@ export default function RegisterScreen() {
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>Create Account</Text>
           )}
         </TouchableOpacity>
+
+        {submitError && (
+          <Text style={{ color: '#dc2626', fontSize: 13, textAlign: 'center' }}>
+            {submitError}
+          </Text>
+        )}
 
         <View style={{ alignItems: 'center', marginTop: 16 }}>
           <Text style={{ fontSize: 13, color: '#64748b' }}>Already have an account? </Text>
